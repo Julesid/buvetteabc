@@ -1,6 +1,6 @@
 package com.cheminat.buvetteabc.security;
 
-import com.cheminat.buvetteabc.data.User;
+import com.cheminat.buvetteabc.data.UserAbc;
 import com.cheminat.buvetteabc.data.UserRepository;
 import com.vaadin.flow.spring.security.AuthenticationContext;
 import java.util.Optional;
@@ -20,7 +20,7 @@ public class AuthenticatedUser {
     }
 
     @Transactional
-    public Optional<User> get() {
+    public Optional<UserAbc> get() {
         return authenticationContext.getAuthenticatedUser(UserDetails.class)
                 .map(userDetails -> userRepository.findByUsername(userDetails.getUsername()));
     }

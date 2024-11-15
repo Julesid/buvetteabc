@@ -4,7 +4,7 @@ package com.cheminat.buvetteabc.data;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
+public interface UserRepository extends JpaRepository<UserAbc, Long>, JpaSpecificationExecutor<UserAbc> {
 
-    User findByUsername(String username);
+    UserAbc findByUsername(String username);
 }

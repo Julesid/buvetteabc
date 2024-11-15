@@ -1,6 +1,6 @@
 package com.cheminat.buvetteabc.security;
 
-import com.cheminat.buvetteabc.data.User;
+import com.cheminat.buvetteabc.data.UserAbc;
 import com.cheminat.buvetteabc.data.UserRepository;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,7 +24,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
+        UserAbc user = userRepository.findByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException("No user present with username: " + username);
         } else {
@@ -33,7 +33,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
     }
 
-    private static List<GrantedAuthority> getAuthorities(User user) {
+    private static List<GrantedAuthority> getAuthorities(UserAbc user) {
         return user.getRoles().stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                 .collect(Collectors.toList());
 
