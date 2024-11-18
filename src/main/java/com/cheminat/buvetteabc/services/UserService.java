@@ -1,6 +1,6 @@
 package com.cheminat.buvetteabc.services;
 
-import com.cheminat.buvetteabc.data.UserAbc;
+import com.cheminat.buvetteabc.data.User;
 import com.cheminat.buvetteabc.data.UserRepository;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -17,11 +17,11 @@ public class UserService {
         this.repository = repository;
     }
 
-    public Optional<UserAbc> get(Long id) {
+    public Optional<User> get(Long id) {
         return repository.findById(id);
     }
 
-    public UserAbc update(UserAbc entity) {
+    public User update(User entity) {
         return repository.save(entity);
     }
 
@@ -29,11 +29,11 @@ public class UserService {
         repository.deleteById(id);
     }
 
-    public Page<UserAbc> list(Pageable pageable) {
+    public Page<User> list(Pageable pageable) {
         return repository.findAll(pageable);
     }
 
-    public Page<UserAbc> list(Pageable pageable, Specification<UserAbc> filter) {
+    public Page<User> list(Pageable pageable, Specification<User> filter) {
         return repository.findAll(filter, pageable);
     }
 

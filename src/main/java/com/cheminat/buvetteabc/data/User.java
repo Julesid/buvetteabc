@@ -13,7 +13,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "application_user")
-public class UserAbc extends AbstractEntity {
+public class User extends AbstractEntity {
 
     private String username;
     private String name;

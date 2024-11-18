@@ -1,6 +1,6 @@
 package com.cheminat.buvetteabc.views;
 
-import com.cheminat.buvetteabc.data.UserAbc;
+import com.cheminat.buvetteabc.data.User;
 import com.cheminat.buvetteabc.security.AuthenticatedUser;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -88,9 +88,9 @@ public class MainLayout extends AppLayout {
     private Footer createFooter() {
         Footer layout = new Footer();
 
-        Optional<UserAbc> maybeUser = authenticatedUser.get();
+        Optional<User> maybeUser = authenticatedUser.get();
         if (maybeUser.isPresent()) {
-            UserAbc user = maybeUser.get();
+            User user = maybeUser.get();
 
             Avatar avatar = new Avatar(user.getName());
             StreamResource resource = new StreamResource("profile-pic",
