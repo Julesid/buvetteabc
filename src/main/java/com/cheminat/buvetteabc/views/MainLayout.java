@@ -26,6 +26,7 @@ import com.vaadin.flow.server.menu.MenuConfiguration;
 import com.vaadin.flow.server.menu.MenuEntry;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 
@@ -86,43 +87,67 @@ public class MainLayout extends AppLayout {
     }
 
     private Footer createFooter() {
-        Footer layout = new Footer();
+    Footer layout = new Footer();
 
-        Optional<User> maybeUser = authenticatedUser.get();
-        if (maybeUser.isPresent()) {
-            User user = maybeUser.get();
+    Optional<User> maybeUser = authenticatedUser.get();
+    if (maybeUser.isPresent()) {
+        User user = maybeUser.get();
 
-            Avatar avatar = new Avatar(user.getName());
-            StreamResource resource = new StreamResource("profile-pic",
-                    () -> new ByteArrayInputStream(user.getProfilePicture()));
+        Avatar avatar = new Avatar(user.getName());
+        
+        // Vérifier si l'utilisateur a une image de profil
+        if (user.getProfilePicture() != null) {
+            // Convertir les bytes hexadécimaux en une chaîne Base64
+            String hexString = new String(user.getProfilePicture(), StandardCharsets.UTF_8);
+            byte[] imageBytes = hexStringToByteArray(hexString);
+
+            // Convertir en Base64 pour l'affichage dans un <img> HTML
+            String base64Image = "data:image/png;base64," + java.util.Base64.getEncoder().encodeToString(imageBytes);
+            
+            // Créer un StreamResource à partir de la chaîne Base64
+            StreamResource resource = new StreamResource("profile-pic", () -> new ByteArrayInputStream(imageBytes));
             avatar.setImageResource(resource);
-            avatar.setThemeName("xsmall");
-            avatar.getElement().setAttribute("tabindex", "-1");
-
-            MenuBar userMenu = new MenuBar();
-            userMenu.setThemeName("tertiary-inline contrast");
-
-            MenuItem userName = userMenu.addItem("");
-            Div div = new Div();
-            div.add(avatar);
-            div.add(user.getName());
-            div.add(new Icon("lumo", "dropdown"));
-            div.getElement().getStyle().set("display", "flex");
-            div.getElement().getStyle().set("align-items", "center");
-            div.getElement().getStyle().set("gap", "var(--lumo-space-s)");
-            userName.add(div);
-            userName.getSubMenu().addItem("Sign out", e -> {
-                authenticatedUser.logout();
-            });
-
-            layout.add(userMenu);
-        } else {
-            Anchor loginLink = new Anchor("login", "Sign in");
-            layout.add(loginLink);
         }
 
-        return layout;
+        avatar.setThemeName("xsmall");
+        avatar.getElement().setAttribute("tabindex", "-1");
+
+        MenuBar userMenu = new MenuBar();
+        userMenu.setThemeName("tertiary-inline contrast");
+
+        MenuItem userName = userMenu.addItem("");
+        Div div = new Div();
+        div.add(avatar);
+        div.add(user.getName());
+        div.add(new Icon("lumo", "dropdown"));
+        div.getElement().getStyle().set("display", "flex");
+        div.getElement().getStyle().set("align-items", "center");
+        div.getElement().getStyle().set("gap", "var(--lumo-space-s)");
+        userName.add(div);
+        userName.getSubMenu().addItem("Sign out", e -> {
+            authenticatedUser.logout();
+        });
+
+        layout.add(userMenu);
+    } else {
+        Anchor loginLink = new Anchor("login", "Sign in");
+        layout.add(loginLink);
     }
+
+    return layout;
+}
+
+// Méthode utilitaire pour convertir une chaîne hexadécimale en un tableau de bytes
+private byte[] hexStringToByteArray(String hex) {
+    int len = hex.length();
+    byte[] data = new byte[len / 2];
+    for (int i = 0; i < len; i += 2) {
+        data[i / 2] = (byte) ((Character.digit(hex.charAt(i), 16) << 4)
+                            + Character.digit(hex.charAt(i + 1), 16));
+    }
+    return data;
+}
+
 
     @Override
     protected void afterNavigation() {

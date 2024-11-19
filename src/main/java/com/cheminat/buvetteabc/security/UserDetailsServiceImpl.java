@@ -2,6 +2,8 @@ package com.cheminat.buvetteabc.security;
 
 import com.cheminat.buvetteabc.data.User;
 import com.cheminat.buvetteabc.data.UserRepository;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.security.core.GrantedAuthority;
@@ -34,8 +36,30 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     private static List<GrantedAuthority> getAuthorities(User user) {
-        return user.getRoles().stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role))
-                .collect(Collectors.toList());
+
+        // Récupérer les rôles associés à l'utilisateur fourni
+
+        List<GrantedAuthority> sesRoles = new ArrayList<>();
+
+
+        if (user != null && user.getRoles() != null) {
+
+            // Ajout d'une autorité basée sur les rôles de UserABC
+
+            GrantedAuthority g = new SimpleGrantedAuthority("ROLE_" + user.getRoles().toString());
+
+            sesRoles.add(g);
+
+        } else {
+
+            // Gérer le cas où l'utilisateur ou ses rôles sont nuls
+
+            throw new UsernameNotFoundException("User or roles are not found");
+
+        }
+
+
+        return sesRoles;
 
     }
 

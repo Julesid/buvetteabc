@@ -2,6 +2,7 @@ package com.cheminat.buvetteabc.services;
 
 import com.cheminat.buvetteabc.data.User;
 import com.cheminat.buvetteabc.data.UserRepository;
+import com.cheminat.buvetteabc.data.SoldeRepository;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,9 +13,12 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository repository;
+    private final SoldeRepository soldeRepository;
 
-    public UserService(UserRepository repository) {
+    // Constructeur avec les deux repositories
+    public UserService(UserRepository repository, SoldeRepository soldeRepository) {
         this.repository = repository;
+        this.soldeRepository = soldeRepository;
     }
 
     public Optional<User> get(Long id) {
@@ -41,4 +45,11 @@ public class UserService {
         return (int) repository.count();
     }
 
+    // Méthode pour obtenir le solde d'un utilisateur
+    public Double getBalanceForUser(Long userId) {
+        // Recherche du solde associé à l'utilisateur, retourne 0.0 si absent
+        return soldeRepository.findByUserId(userId)
+                              .map(solde -> solde.getSOLDE())
+                              .orElse(0.0);
+    }
 }

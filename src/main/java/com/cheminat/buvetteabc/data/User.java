@@ -20,8 +20,7 @@ public class User extends AbstractEntity {
     @JsonIgnore
     private String hashedPassword;
     @Enumerated(EnumType.STRING)
-    @ElementCollection(fetch = FetchType.EAGER)
-    private Set<Role> roles;
+    private Role roles;
     @Lob
     @Column(length = 1000000)
     private byte[] profilePicture;
@@ -44,10 +43,10 @@ public class User extends AbstractEntity {
     public void setHashedPassword(String hashedPassword) {
         this.hashedPassword = hashedPassword;
     }
-    public Set<Role> getRoles() {
+    public Role getRoles() {
         return roles;
     }
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(Role roles) {
         this.roles = roles;
     }
     public byte[] getProfilePicture() {
